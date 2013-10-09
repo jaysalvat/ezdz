@@ -1,7 +1,7 @@
 ezdz
 ====
 
-Ezdz [izy-dizy] - Drop file zone jQuery plugin with preview and validators.
+Ezdz [izy-dizy] jQuery plugin turns any standard input type file in a nice drag & drop zone with validators and image previews.
 
 Getting Started
 ---------------
