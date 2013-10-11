@@ -65,7 +65,7 @@
         // Public: Destroy la ezdz
         self.destroy = function() {
             $input.closest('div').replaceWith($input);
-            $input.off('change.ezdz');
+            $input.off('*.ezdz');
             $input.data('ezdz', '');
         };
 
@@ -263,6 +263,15 @@
             $ezdz.addClass(settings.className);
             $input.wrap($ezdz);
             $input.before('<div>' + settings.text + '</div>');
+
+            // Focus and blur
+            $input.on('focus.ezdz', function() {
+                $(this).closest('div').addClass(settings.classes.focus);
+            });
+
+            $input.on('blur.ezdz', function() {
+                $(this).closest('div').removeClass(settings.classes.focus);
+            });
 
             // Preview a file at start if it's defined
             var value = settings.value || $input.data('value');

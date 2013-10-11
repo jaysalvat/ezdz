@@ -58,6 +58,11 @@
             left: 0;
         }
 
+    .ezdz-focus {
+        border: 10px dotted darkgray;
+        color: darkgray;
+    }
+    
     .ezdz-enter {
         border: 10px solid black;
         color: black;
