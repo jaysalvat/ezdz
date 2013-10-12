@@ -35,7 +35,12 @@
             settings = $.extend(true, {}, defaults, $.ezdz.defaults, options),
             $input   = $(element);
 
-        // Stop in not HTML5
+        if (!$input.is('input[type="file"]')) {
+            $.error('Ezdz error - Must be apply to inputs type file.');
+            return;
+        }
+
+        // Stop if not File Api compatible
         if (!(window.File && window.FileList && window.FileReader)) {
             return;
         }
@@ -300,7 +305,7 @@
             } if (plugin[options]) {
                 return plugin[options].apply(this, Array.prototype.slice.call(args, 1));
             } else {
-                $.error('Method ' +  options + ' does not exist on jQuery.ezdz');
+                $.error('Ezdz error - Method ' +  options + ' does not exist.');
             }
         });
     };
