@@ -1,3 +1,14 @@
+/* ----------------------------------------------------------------------------
+// Ezdz [izy-dizy]
+// A jQuery plugin to turn any standard input type file into a nice 
+// drag & drop zone with validators and previews. 
+// Licensed under the MIT license.
+// http://github.com/jaysalvat/ezdz/
+// ----------------------------------------------------------------------------
+// Copyright (C) 2013 Jay Salvat
+// http://jaysalvat.com/
+// --------------------------------------------------------------------------*/
+
 (function($) {
     // Default settings
     var defaults = {
