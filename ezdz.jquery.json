@@ -1,7 +1,7 @@
 {
     "name": "ezdz",
-    "title": "ezdz jQuery plugin",
-    "description": "Ezdz [izy-dizy] jQuery plugin turns any standard input type file in a nice drag & drop zone with validators and image previews.",
+    "title": "Ezdz jQuery plugin",
+    "description": "Ezdz [izy-dizy] - A jQuery plugin to turn any standard input type file into a nice drag & drop zone with validators and previews.",
     "keywords": [
         "file",
         "form",
