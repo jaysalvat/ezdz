@@ -200,7 +200,8 @@
                 reader.readAsDataURL(file);
 
                 reader.onload = function(e) {
-                    img.src = e.target.result;
+                    file.data = e.target.result;
+                    img.src   = file.data;
 
                     var isImage = (img.width && img.height);
 
