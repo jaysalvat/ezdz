@@ -46,7 +46,7 @@
 
             equal($preview.find('img').attr('src'), imageUrl);
 
-            start();    
+            start();
         });
     });
 
@@ -59,7 +59,7 @@
 
             equal($preview.find('span').text(), "master.zip");
 
-            start();    
+            start();
         });
     });
 

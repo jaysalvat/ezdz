@@ -1,13 +1,12 @@
-/* ----------------------------------------------------------------------------
-// Ezdz [izy-dizy]
-// A jQuery plugin to turn any standard input type file into a nice 
-// drag & drop zone with validators and previews. 
-// Licensed under the MIT license.
-// http://github.com/jaysalvat/ezdz/
-// ----------------------------------------------------------------------------
-// Copyright (C) 2013 Jay Salvat
-// http://jaysalvat.com/
-// --------------------------------------------------------------------------*/
+ /* ----------------------------------------------------------------------------
+ // Ezdz [izy-dizy] jQuery plugin
+ // v0.1.0 - released 2013-10-14 00:43
+ // Licensed under the MIT license.
+ // https://github.com/jaysalvat/ezdz
+ // ----------------------------------------------------------------------------
+ // Copyright (C) 2013 Jay Salvat
+ // http://jaysalvat.com/
+ // ---------------------------------------------------------------------------*/
 
 (function($) {
     // Default settings
@@ -107,7 +106,7 @@
             // Build the container
             $container = $('<div class="' + settings.classes.main + '" />')
 
-            .on('dragover.ezdz', function(e) {
+            .on('dragover.ezdz', function() {
                 $(this).addClass(settings.classes.enter);
 
                 if ($.isFunction(settings.enter)) {
@@ -115,7 +114,7 @@
                 }
             })
 
-            .on('dragleave.ezdz', function(e) {
+            .on('dragleave.ezdz', function() {
                 $(this).removeClass(settings.classes.enter);
 
                 if ($.isFunction(settings.leaved)) {
@@ -133,7 +132,9 @@
             $ezdz = $input.parent('.' + settings.classes.main);
 
             // Preview a file at start if it's defined
-            if (value = settings.value || $input.data('value')) {
+            value = settings.value || $input.data('value');
+
+            if (value) {
                 self.preview(value);
             }
 
@@ -153,7 +154,7 @@
                 $ezdz.removeClass(settings.classes.focus);
             })
 
-            .on('change.ezdz', function(e) {
+            .on('change.ezdz', function() {
                 var file = this.files[0];
 
                 // No file, so user has cancelled
