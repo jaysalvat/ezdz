@@ -1,10 +1,14 @@
 /* jshint node: true */
 
+var semver = require('semver');
+
 module.exports = function(grunt) {
     'use strict';
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+
+        version: grunt.file.readJSON('package.json').version,
 
         banner: [
             ' /* ----------------------------------------------------------------------------',
@@ -28,6 +32,11 @@ module.exports = function(grunt) {
                 pattern: '%VERSION%',
                 replacement: '<%= version %>',
                 path: [ 'dist/*' ]
+            },
+            copyright: {
+                pattern: /\(c\) \d{4} /,
+                replacement: '(c) <%= grunt.template.today("yyyy") %> ',
+                path: [ 'README.md', 'MIT-LICENSE' ]
             }
         },
 
@@ -71,12 +80,7 @@ module.exports = function(grunt) {
         },
 
         qunit: {
-            src: {
-                files: [ 'test/index.html' ]
-            },
-            dist: {
-                files: [ 'test/index.min.html' ]
-            }
+            all: [ 'test/index.html' ]
         },
 
         recess: {
@@ -100,7 +104,55 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-recess');
+    grunt.loadNpmTasks('semver');
 
-    grunt.registerTask('test', [ 'jshint', 'qunit:src' ]);
-    grunt.registerTask('build', [ 'test:src', 'clean', 'concat', 'uglify', 'recess', 'test:dist' ]);
+    grunt.registerTask('test',  'Run tests.', [ 'jshint', 'qunit' ]);
+    grunt.registerTask('build', 'Build.', [ 'test', 'clean', 'concat', 'uglify', 'recess' ]);
+
+    grunt.registerTask('bump', 'Bump version.', function(version, force) {
+        var currentVersion = grunt.config.get('version');
+
+        version = semver.inc(currentVersion, version) || version;
+
+        if (!semver.valid(version) || (!force && semver.lte(version, currentVersion))) {
+            grunt.fatal('Invalid version dummy.');
+        }
+
+        grunt.config.set('version', version);
+
+        grunt.task.run([
+            'manifests:' + version,
+            'build'
+        ]);
+    });
+
+    grunt.registerTask('manifests', 'Update manifests.', function(version) {
+        var _     = grunt.util._,
+            pkg   = grunt.file.readJSON('package.json'),
+            bower = grunt.file.readJSON('bower.json'),
+            jqry  = grunt.file.readJSON('ezdz.jquery.json');
+
+        bower = JSON.stringify(_.extend(bower, {
+            version: version
+        }), null, 4);
+
+        jqry = JSON.stringify(_.extend(jqry, {
+            version: version,
+            description: pkg.description
+        }), null, 4);
+
+        pkg = JSON.stringify(_.extend(pkg, {
+            version: version
+        }), null, 4);
+
+        grunt.config.data.pkg = JSON.parse(pkg);
+
+        grunt.file.write('package.json', pkg);
+        grunt.file.write('bower.json', bower);
+        grunt.file.write('ezdz.jquery.json', jqry);
+
+        grunt.task.run([
+            'sed:copyright'
+        ]);
+    });
 };

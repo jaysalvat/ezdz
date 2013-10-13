@@ -1,10 +1,9 @@
 {
     "name": "ezdz",
     "version": "0.1.0",
-    "main": [ "jquery.ezdz.js", "jquery.ezdz.css" ],
-    "ignore": [
-        ".jshintrc",
-        ".editorconfig"
+    "main": [
+        "jquery.ezdz.js",
+        "jquery.ezdz.css"
     ],
     "dependencies": {
         "jquery": ">=1.8"

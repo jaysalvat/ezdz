@@ -42,6 +42,6 @@
     },
     "main": "dist/jquery.ezdz.js",
     "scripts": {
-        "test" : "grunt test"
+        "test": "grunt test"
     }
 }
