@@ -20,7 +20,8 @@
             main:      'ezdz-dropzone',
             enter:     'ezdz-enter',
             reject:    'ezdz-reject',
-            accept:    'ezdz-accept'
+            accept:    'ezdz-accept',
+            focus:     'ezdz-focus'
         },
         validators: {
             maxSize:   null,
@@ -113,9 +114,9 @@
 
             // Lorsqu'un fichier est droppé ou ajouté
             $input.on('change.ezdz', function(e) {
-                var $input    = $(this),
-                    $ezdz = $input.closest('div'),
-                    file      = this.files[0];
+                var $input  = $(this),
+                    $ezdz   = $input.closest('div'),
+                    file    = this.files[0];
 
                 // No file, so user has cancelled
                 if (!file) {
@@ -283,11 +284,11 @@
 
             // Focus and blur
             $input.on('focus.ezdz', function() {
-                $(this).closest('div').addClass(settings.classes.focus);
+                $input.closest('div').addClass(settings.classes.focus);
             });
 
             $input.on('blur.ezdz', function() {
-                $(this).closest('div').removeClass(settings.classes.focus);
+                $input.closest('div').removeClass(settings.classes.focus);
             });
 
             // Preview a file at start if it's defined
