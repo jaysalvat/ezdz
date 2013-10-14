@@ -42,9 +42,12 @@
 
     // Main plugin
     $.ezdz = function(element, options) {
-        var self     = this,
-            settings = $.extend(true, {}, defaults, $.ezdz.defaults, options),
-            $input   = $(element);
+        this.settings = $.extend(true, {}, defaults, $.ezdz.defaults, options);
+        this.$input   = $(element);
+
+        var self      = this,
+            settings  = self.settings,
+            $input    = self.$input;
 
         if (!$input.is('input[type="file"]')) {
             $.error('Ezdz error - Must be apply to inputs type file.');
@@ -55,48 +58,6 @@
         if (!(window.File && window.FileList && window.FileReader)) {
             return;
         }
-
-        // Public: Inject a file or image in the preview
-        self.preview = function(path, callback) {
-            var basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
-                formatted = settings.format(basename),
-                $ezdz     = $input.parent('.' + settings.classes.main);
-
-            var img = new Image();
-            img.src = path;
-
-            // Is an image
-            img.onload = function() {
-                $ezdz.find('div').html($(img).fadeIn());
-
-                if ($.isFunction(callback)) {
-                     callback.apply(this);
-                }
-            };
-
-            // Is not an image
-            img.onerror = function() {
-                $ezdz.find('div').html('<span>' + formatted + '</span>');
-
-                if ($.isFunction(callback)) {
-                     callback.apply(this);
-                }
-            };
-
-            $ezdz.addClass(settings.classes.accept);
-        };
-
-        // Public: Destroy ezdz
-        self.destroy = function() {
-            $input.parent('.' + settings.classes.main).replaceWith($input);
-            $input.off('*.ezdz');
-            $input.data('ezdz', '');
-        };
-
-        // Public: Extend settings
-        self.options = function(values) {
-            $.extend(true, settings, values);
-        };
 
         // private: Init the plugin
         var init = function() {
@@ -122,7 +83,7 @@
             })
 
             .addClass(settings.className);
-            
+
             // Build the whole dropzone
             $input
                 .wrap($container)
@@ -317,6 +278,58 @@
         init();
     };
 
+    // Inject a file or image in the preview
+    $.ezdz.prototype.preview = function(path, callback) {
+        var settings  = this.settings,
+            $input    = this.$input,
+            $ezdz     = $input.parent('.' + settings.classes.main);
+            basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
+            formatted = settings.format(basename);
+
+        var img = new Image();
+        img.src = path;
+
+        // Is an image
+        img.onload = function() {
+            $ezdz.find('div').html($(img).fadeIn());
+
+            if ($.isFunction(callback)) {
+                 callback.apply(this);
+            }
+        };
+
+        // Is not an image
+        img.onerror = function() {
+            $ezdz.find('div').html('<span>' + formatted + '</span>');
+
+            if ($.isFunction(callback)) {
+                 callback.apply(this);
+            }
+        };
+
+        $ezdz.addClass(settings.classes.accept);
+    };
+
+    // Destroy ezdz
+    $.ezdz.prototype.destroy = function() {
+        var settings = this.settings,
+            $input   = this.$input;
+
+        $input.parent('.' + settings.classes.main).replaceWith($input);
+        $input.off('*.ezdz');
+        $input.data('ezdz', '');
+    };
+
+    // Extend settings
+    $.ezdz.prototype.options = function(values) {
+        var settings = this.settings;
+
+        $.extend(true, this.settings, values);
+    };
+
+    // Default options
+    $.ezdz.prototype.defaults = defaults;
+
     $.fn.ezdz = function(options) {
         var args = arguments;
 
@@ -326,13 +339,11 @@
             if (!plugin) {
                 return $(this).data('ezdz', new $.ezdz(this, options));
             } if (plugin[options]) {
-                return plugin[options].apply(this, Array.prototype.slice.call(args, 1));
+                return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
             } else {
                 $.error('Ezdz error - Method ' +  options + ' does not exist.');
             }
         });
     };
-
-    $.ezdz.defaults = defaults;
 
 })(jQuery);
