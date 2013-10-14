@@ -100,7 +100,7 @@
 
             // Trigger the init callback
             if ($.isFunction(settings.init)) {
-                 settings.init.apply($ezdz, [ value ]);
+                 settings.init.apply($input, [ value ]);
             }
 
             // Events on the input
@@ -186,7 +186,7 @@
 
                     // Trigger the reject callback
                     if ($.isFunction(settings.reject)) {
-                         settings.reject.apply($ezdz, [ file, errors ]);
+                         settings.reject.apply($input, [ file, errors ]);
                     }
                     return false;
                 }
@@ -260,7 +260,7 @@
 
                         // Trigger the accept callback
                         if ($.isFunction(settings.accept)) {
-                             settings.accept.apply($ezdz, [ file ]);
+                             settings.accept.apply($input, [ file ]);
                         }
                     // The file is invalidated, so rejected
                     } else {
@@ -270,7 +270,7 @@
 
                         // Trigger the reject callback
                         if ($.isFunction(settings.reject)) {
-                             settings.reject.apply($ezdz, [ file, errors ]);
+                             settings.reject.apply($input, [ file, errors ]);
                         }
                     }
                 };
