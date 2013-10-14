@@ -192,16 +192,18 @@
                 }
 
                 // Read the added file
-                var reader = new FileReader(file),
-                    img    = new Image();
+                var reader = new FileReader(file);
 
                 reader.readAsDataURL(file);
 
                 reader.onload = function(e) {
+                    var img = new Image(),
+                        isImage;
+
                     file.data = e.target.result;
                     img.src   = file.data;
 
-                    var isImage = (img.width && img.height);
+                    isImage = (img.width && img.height);
 
                     // Validator
                     if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
@@ -330,6 +332,7 @@
     // Default options
     $.ezdz.prototype.defaults = defaults;
 
+    // jQuery plugin
     $.fn.ezdz = function(options) {
         var args = arguments;
 
