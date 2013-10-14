@@ -333,6 +333,14 @@
         $.extend(true, this.settings, options);
     };
 
+    // Get input container
+    $.ezdz.prototype.container = function() {
+        var settings = this.settings,
+            $input   = this.$input;
+
+        return $input.parent('.' + settings.classes.main);
+    };
+
     // Default options
     $.ezdz.prototype.defaults = defaults;
 
