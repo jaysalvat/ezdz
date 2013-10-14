@@ -1,6 +1,7 @@
 /* jshint node: true */
 
-var semver = require('semver');
+var semver = require('semver'),
+    format = require('util').format;
 
 module.exports = function(grunt) {
     'use strict';
@@ -24,7 +25,8 @@ module.exports = function(grunt) {
         ].join('\n'),
 
         clean: {
-          dist: ['dist']
+          dist: ['dist'],
+          tmp: ['tmp']
         },
 
         sed: {
@@ -93,22 +95,147 @@ module.exports = function(grunt) {
                 src: [ 'src/jquery.ezdz.css' ],
                 dest: 'dist/jquery.ezdz.min.css'
             }
+        },
+
+        compress: {
+            main: {
+                options: {
+                    archive: 'tmp/jquery.ezdz.zip'
+                },
+                files: [
+                    { flatten: true, expand: true, src: [ 'dist/*' ], dest: 'tmp/' }
+                ]
+            }
+        },
+
+        copy: {
+            main: {
+                files: [
+                    { flatten: true, expand: true, src: [ 'dist/*' ], dest: 'tmp/' }
+                ]
+            }
+        },
+
+        exec: {
+            gitIsClean: {
+                cmd: 'test -z "$(git status --porcelain)"'
+            },
+            gitIsOnMaster: {
+                cmd: 'test $(git symbolic-ref -q HEAD) = refs/heads/master'
+            },
+            gitAdd: {
+                cmd: 'git add .'
+            },
+            gitCommit: {
+                cmd: function(message) {
+                    return format('git commit -m "Build v%s"', message);
+                }
+            },
+            gitTag: {
+                cmd: function(version) {
+                    return format('git tag v%s -am "%s"', version, version);
+                }
+            },
+            gitPush: {
+                cmd: [
+                    'git push',
+                    'git push --tags'
+                ].join(' && ')
+            },
+            publish: {
+                cmd: [
+                    'git checkout gh-pages',
+                    'mkdir -p releases',
+                    'rm -rf releases/latest',
+                    'cp -r tmp releases/<%= version %>',
+                    'cp -r tmp releases/latest',
+                    'git add releases/<%= version %> releases/latest',
+                    'git commit -m "Add assets for v<%= version %>."',
+                    'git push',
+                    'git checkout -'
+                ].join(' && ')
+            }
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-sed');
-    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-recess');
     grunt.loadNpmTasks('semver');
 
-    grunt.registerTask('test',  'Run tests.', [ 'jshint', 'qunit' ]);
-    grunt.registerTask('build', 'Build.', [ 'test', 'clean', 'concat', 'uglify', 'recess' ]);
+    grunt.registerTask('default', 'Default task', [ 'build' ]);
+    grunt.registerTask('test', 'Run tests.', [ 'jshint', 'qunit' ]);
+    grunt.registerTask('build', 'Build.', [ 'clean:dist', 'concat', 'uglify', 'recess' ]);
+    grunt.registerTask('tmp', 'Build tmp folder.', [ 'clean:tmp', 'copy', 'compress', 'metadata' ]);
 
+    /**
+     * Publish and release a new version
+     * @param  {string} version semver version number
+     * @param  {bool}   force   force the bump even if the version is lower
+     */
+    grunt.registerTask('release', 'Release.', function(version, force) {
+        var currentVersion = grunt.config.get('version');
+
+        version = semver.inc(currentVersion, version) || version;
+
+        if (!semver.valid(version) || (!force && semver.lte(version, currentVersion))) {
+            grunt.fatal('Invalid version dummy.');
+        }
+
+        grunt.config.set('version', version);
+
+        grunt.task.run([
+            'exec:gitIsOnMaster',           // Check if it is on Master
+            'exec:gitIsClean',              // Check if everything has been committed
+            'test',                         // Run test
+            'manifests:' + version,         // Update manifests
+            'build',                        // Build the disttib
+            'exec:gitAdd',                  // Git add it
+            'exec:gitCommit:' + version,    // Git commit it
+            'exec:gitTag:' + version,       // Git add a new tag
+            'exec:gitPush',                 // Git push it th Github
+            'publish'                       // Publish assets
+        ]);
+    });
+
+    /**
+     * Publish the assets
+     */
+    grunt.registerTask('publish', 'Publish file.', function() {
+        grunt.task.run([
+            'tmp',           // Build the tmp folder from dist
+            'exec:publish',  // Publish assets
+            'clean:tmp'      // Remove the tmp folder
+        ]);
+    });
+
+    /**
+     * Create a metadata json file
+     * @param  {string} version numeric version
+     */
+    grunt.registerTask('metadata', 'Create metadata file.', function(version) {
+        version = version || grunt.config.get('version');
+
+        var metadata = {
+            'date': grunt.template.today("yyyy-mm-dd HH:MM:ss"),
+            'version': version
+        };
+
+        grunt.file.write('tmp/metadata.json', JSON.stringify(metadata, null, 4));
+    });
+
+    /**
+     * Bump manifests and build
+     * @param  {string} version semver version number
+     * @param  {bool}   force   force the bump even if the version is lower
+     */
     grunt.registerTask('bump', 'Bump version.', function(version, force) {
         var currentVersion = grunt.config.get('version');
 
@@ -126,6 +253,10 @@ module.exports = function(grunt) {
         ]);
     });
 
+    /**
+     * Update manifests
+     * @param  {string} version semver version number
+     */
     grunt.registerTask('manifests', 'Update manifests.', function(version) {
         var _     = grunt.util._,
             pkg   = grunt.file.readJSON('package.json'),
