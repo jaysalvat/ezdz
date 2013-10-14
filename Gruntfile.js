@@ -169,7 +169,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-recess');
-    grunt.loadNpmTasks('semver');
 
     grunt.registerTask('default', 'Default task', [ 'qunit:src', 'build' ]);
     grunt.registerTask('test', 'Run tests.', [ 'jshint', 'qunit:src' ]);
