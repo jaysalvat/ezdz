@@ -323,10 +323,14 @@
     };
 
     // Extend settings
-    $.ezdz.prototype.options = function(values) {
+    $.ezdz.prototype.options = function(options) {
         var settings = this.settings;
 
-        $.extend(true, this.settings, values);
+        if (!options) {
+            return settings;
+        }
+
+        $.extend(true, this.settings, options);
     };
 
     // Default options
@@ -334,19 +338,15 @@
 
     // jQuery plugin
     $.fn.ezdz = function(options) {
-        var args = arguments;
+        var args = arguments,
+            plugin = $(this).data('ezdz');
 
-        return this.each(function() {
-            var plugin = $(this).data('ezdz');
-
-            if (!plugin) {
-                return $(this).data('ezdz', new $.ezdz(this, options));
-            } if (plugin[options]) {
-                return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
-            } else {
-                $.error('Ezdz error - Method ' +  options + ' does not exist.');
-            }
-        });
+        if (!plugin) {
+            return $(this).data('ezdz', new $.ezdz(this, options));
+        } if (plugin[options]) {
+            return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
+        } else {
+            $.error('Ezdz error - Method ' +  options + ' does not exist.');
+        }
     };
-
 })(jQuery);
