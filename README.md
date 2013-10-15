@@ -3,15 +3,18 @@ Ezdz [izy-dizy]
 
 Ezdz is a jQuery plugin to turn any standard input type file into a nice drag & drop zone with validators and previews.
 
-Demo
-----
+#### Note
 
-Ezdz is in an early stage of development. Some demos are coming...
+Ezdz uses HTML5 [File](http://www.w3.org/TR/FileAPI/), [Drag and Drop](http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html) API, so it works properly on modern browsers only. I've tested it on last version of Chrome, Firefox and Safari on MacOSX only. Feedbacks are welcomed.
+
+#### Demo
+
+Ezdz is in an early stage of development. Some demos are coming... Meanwhile please check [a quick demo on Codepen](http://codepen.io/jaysalvat/full/wjFcn).
 
 Getting Started
 ---------------
 
-Include jQuery.
+Include [jQuery](http://code.jquery.com/jquery.min.js).
 
     <script src="jquery.min.js"></script>
 
@@ -30,25 +33,25 @@ And apply Ezdz to your inputs type file.
 Settings
 --------
 
-### className
+#### className
 
 Add a custom class to the container. By default none.
 
-### text
+#### text
 
 Set the dropzone text. By default "drop a file".
 
-### previewImage
+#### previewImage
 
 Set if a image preview is displayed when an image is dropped. By default "true".
 
-### value
+#### value
 
-Set a link to a previously uploaded file.
+Set a link to a previously uploaded file. By default none.
 
-### classes
+#### classes
 
-By default Ezdz classes are:
+Ezdz classes. By default they are:
 
     { classes: {
             main:   'ezdz-dropzone',
@@ -59,9 +62,9 @@ By default Ezdz classes are:
         }
     }
 
-### validators
+#### validators
 
-The available validators are:
+Ezdz allowed validators. By default they are:
 
     { validators: {
             maxSize:   null,
@@ -84,31 +87,37 @@ Self-explanatory I guess.
         }
     });
 
+#### mime-types
+
+Allowed mime-types are defined in the input tag with a standard ``accept``attribute.
+
+    <input type="file" name="logo" accept="image/png, image/jpeg" />
+    
 Callbacks
 ---------
 
-### init
+#### init
 
 Called when the dropzone is built.
 
-### enter
+#### enter
 
 Called when the dropzone is entered by the mouse.
 
-### leave
+#### leave
 
 Called when the dropzone is leaved by the mouse.
 
-### accept
+#### accept
 
 Called when a dropped/added file is added and accepted by validators.
 
-    {   reject: function(file) {
+    {   accept: function(file) {
             alert('The file "' + file.name + '" is ok.');
         }
     }
 
-### reject
+#### reject
 
 Called when a dropped/added file is rejected by validators.
 
@@ -119,7 +128,7 @@ Called when a dropped/added file is rejected by validators.
         }
     }
 
-### format
+#### format
 
 Called before displaying the filename in the preview.
 
@@ -128,7 +137,7 @@ Called before displaying the filename in the preview.
         }
     }
 
-### Default settings
+#### Default settings
 
 Settings can be set for all instances.
 
@@ -143,13 +152,13 @@ Settings can be set for all instances.
 Methods
 -------
 
-### preview
+#### preview
 
 Inject a preview in the dropzone.
 
     $('[type="file"]').ezdz('preview', 'img/previously-uploaded-logo.png');
 
-### options
+#### options
 
 Get or set the settings.
 
@@ -165,7 +174,7 @@ As a setter:
         }
     });
 
-### destroy
+#### destroy
 
     $('[type="file"]').ezdz('destroy');
 
