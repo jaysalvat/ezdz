@@ -1,6 +1,6 @@
 {
     "name": "ezdz",
-    "version": "0.2.0-wip",
+    "version": "0.2.1",
     "main": [
         "jquery.ezdz.js",
         "jquery.ezdz.css"
