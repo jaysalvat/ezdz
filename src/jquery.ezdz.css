@@ -22,7 +22,7 @@
 
     .ezdz-dropzone div {
         /* */
-    } 
+    }
 
         .ezdz-dropzone span {
             border-radius: 20px;
@@ -67,7 +67,7 @@
         border: 10px dotted darkgray;
         color: darkgray;
     }
-    
+
     .ezdz-enter {
         border: 10px solid black;
         color: black;
