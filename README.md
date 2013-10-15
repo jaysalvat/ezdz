@@ -1,7 +1,12 @@
-ezdz
-====
+Ezdz [izy-dizy]
+===============
 
-Ezdz [izy-dizy] - A jQuery plugin to turn any standard input type file into a nice drag & drop zone with validators and previews. 
+Ezdz is a jQuery plugin to turn any standard input type file into a nice drag & drop zone with validators and previews.
+
+Demo
+----
+
+Ezdz is in an early stage of development. Some demos are coming...
 
 Getting Started
 ---------------
@@ -9,19 +14,161 @@ Getting Started
 Include jQuery.
 
     <script src="jquery.min.js"></script>
-    
-Include ezdz script.
 
-    <script src="ezdz/jquery.ezdz.js"></script>
+Include Ezdz styles.
 
-Include ezdz styles.
+    <link rel="stylesheet" href="ezdz/dist/jquery.ezdz.min.css">
 
-    <link rel="stylesheet" href="ezdz/jquery.ezdz.css">
-    
-And apply ezdz to your inputs type file.
+Include Ezdz script.
+
+    <script src="ezdz/dist/jquery.ezdz.min.js"></script>
+
+And apply Ezdz to your inputs type file.
 
     $('input[type="file"]').ezdz();
-    
+
+Settings
+--------
+
+### className
+
+Add a custom class to the container. By default none.
+
+### text
+
+Set the dropzone text. By default "drop a file".
+
+### previewImage
+
+Set if a image preview is displayed when an image is dropped. By default "true".
+
+### value
+
+Set a link to a previously uploaded file.
+
+### classes
+
+By default Ezdz classes are:
+
+    { classes: {
+            main:   'ezdz-dropzone',
+            enter:  'ezdz-enter',
+            reject: 'ezdz-reject',
+            accept: 'ezdz-accept',
+            focus:  'ezdz-focus'
+        }
+    }
+
+### validators
+
+The available validators are:
+
+    { validators: {
+            maxSize:   null,
+            width:     null,
+            maxWidth:  null,
+            minWidth:  null,
+            height:    null,
+            maxHeight: null,
+            minHeight: null
+        }
+    }
+
+Self-explanatory I guess.
+
+    $('[type="file"]').ezdz({
+        validators: {
+            maxWidth: 600,
+            maxHeight: 400,
+            maxSize: 1000000
+        }
+    });
+
+Callbacks
+---------
+
+### init
+
+Called when the dropzone is built.
+
+### enter
+
+Called when the dropzone is entered by the mouse.
+
+### leave
+
+Called when the dropzone is leaved by the mouse.
+
+### accept
+
+Called when a dropped/added file is added and accepted by validators.
+
+    {   reject: function(file) {
+            alert('The file "' + file.name + '" is ok.');
+        }
+    }
+
+### reject
+
+Called when a dropped/added file is rejected by validators.
+
+    {   reject: function(file, errors) {
+            if (errors.maxWidth || errors.maxHeight) {
+                alert('The file "' + file.name + '" is too big.');
+            }
+        }
+    }
+
+### format
+
+Called before displaying the filename in the preview.
+
+    {   format: function(filename) {
+            return filename.uppercase();
+        }
+    }
+
+### Default settings
+
+Settings can be set for all instances.
+
+    $.ezdz.default = {
+        validators: {
+            maxWidth: 600,
+            maxHeight: 400,
+            maxSize: 1000000
+        }
+    }
+
+Methods
+-------
+
+### preview
+
+Inject a preview in the dropzone.
+
+    $('[type="file"]').ezdz('preview', 'img/previously-uploaded-logo.png');
+
+### options
+
+Get or set the settings.
+
+As a getter:
+
+    var options = $('[type="file"]').ezdz('options');
+
+As a setter:
+
+    $('[type="file"]').ezdz('options', {
+        validators: {
+            maxSize: 10000
+        }
+    });
+
+### destroy
+
+    $('[type="file"]').ezdz('destroy');
+
 License
 -------
 
