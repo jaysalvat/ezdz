@@ -211,76 +211,78 @@
                     file.data = e.target.result;
                     img.src   = file.data;
 
-                    isImage = (img.width && img.height);
+                    setTimeout(function() {
+                        isImage = (img.width && img.height);
 
-                    // Validator
-                    if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
-                        valid = false;
-                        errors.maxSize = true;
-                    }
-
-                    if (isImage) {
-                        file.width  = img.width;
-                        file.height = img.height;
-
-                        if (settings.validators.width && img.width != settings.validators.width) {
+                        // Validator
+                        if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
                             valid = false;
-                            errors.width = true;
+                            errors.maxSize = true;
                         }
 
-                        if (settings.validators.maxWidth && img.width > settings.validators.maxWidth) {
-                            valid = false;
-                            errors.maxWidth = true;
+                        if (isImage) {
+                            file.width  = img.width;
+                            file.height = img.height;
+
+                            if (settings.validators.width && img.width != settings.validators.width) {
+                                valid = false;
+                                errors.width = true;
+                            }
+
+                            if (settings.validators.maxWidth && img.width > settings.validators.maxWidth) {
+                                valid = false;
+                                errors.maxWidth = true;
+                            }
+
+                            if (settings.validators.minWidth && img.width < settings.validators.minWidth) {
+                                valid = false;
+                                errors.minWidth = true;
+                            }
+
+                            if (settings.validators.height && img.height != settings.validators.height) {
+                                valid = false;
+                                errors.height = true;
+                            }
+
+                            if (settings.validators.maxHeight && img.height > settings.validators.maxHeight) {
+                                valid = false;
+                                errors.maxHeight = true;
+                            }
+
+                            if (settings.validators.minHeight && img.height < settings.validators.minHeight) {
+                                valid = false;
+                                errors.minHeight = true;
+                            }
                         }
 
-                        if (settings.validators.minWidth && img.width < settings.validators.minWidth) {
-                            valid = false;
-                            errors.minWidth = true;
-                        }
+                        // The file is validated, so added to input
+                        if (valid === true) {
+                            $ezdz.find('img').remove();
 
-                        if (settings.validators.height && img.height != settings.validators.height) {
-                            valid = false;
-                            errors.height = true;
-                        }
+                            if (isImage && settings.previewImage === true) {
+                                $ezdz.find('div').html($(img).fadeIn());
+                            } else {
+                                $ezdz.find('div').html('<span>' + formatted + '</span>');
+                            }
 
-                        if (settings.validators.maxHeight && img.height > settings.validators.maxHeight) {
-                            valid = false;
-                            errors.maxHeight = true;
-                        }
+                            $ezdz.addClass(settings.classes.accept);
 
-                        if (settings.validators.minHeight && img.height < settings.validators.minHeight) {
-                            valid = false;
-                            errors.minHeight = true;
-                        }
-                    }
-
-                    // The file is validated, so added to input
-                    if (valid === true) {
-                        $ezdz.find('img').remove();
-
-                        if (isImage && settings.previewImage === true) {
-                            $ezdz.find('div').html($(img).fadeIn());
+                            // Trigger the accept callback
+                            if ($.isFunction(settings.accept)) {
+                                 settings.accept.apply($input, [ file ]);
+                            }
+                        // The file is invalidated, so rejected
                         } else {
-                            $ezdz.find('div').html('<span>' + formatted + '</span>');
+                            $input.val('');
+
+                            $ezdz.addClass(settings.classes.reject);
+
+                            // Trigger the reject callback
+                            if ($.isFunction(settings.reject)) {
+                                 settings.reject.apply($input, [ file, errors ]);
+                            }
                         }
-
-                        $ezdz.addClass(settings.classes.accept);
-
-                        // Trigger the accept callback
-                        if ($.isFunction(settings.accept)) {
-                             settings.accept.apply($input, [ file ]);
-                        }
-                    // The file is invalidated, so rejected
-                    } else {
-                        $input.val('');
-
-                        $ezdz.addClass(settings.classes.reject);
-
-                        // Trigger the reject callback
-                        if ($.isFunction(settings.reject)) {
-                             settings.reject.apply($input, [ file, errors ]);
-                        }
-                    }
+                    }, 1);
                 };
             });
         };
