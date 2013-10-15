@@ -1,6 +1,6 @@
 {
     "name": "ezdz",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "title": "Ezdz [izy-dizy] jQuery plugin",
     "description": "A jQuery plugin to turn standard input type file into a nice drag&drop zone with validators and previews.",
     "homepage": "https://github.com/jaysalvat/ezdz",
