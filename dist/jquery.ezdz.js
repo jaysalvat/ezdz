@@ -1,6 +1,6 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy] jQuery plugin
- // v0.2.0-wip - released 2013-10-14 17:36
+ // v0.2.0-wip - released 2013-10-15 12:58
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
@@ -8,7 +8,15 @@
  // http://jaysalvat.com/
  // ---------------------------------------------------------------------------*/
 
-(function($) {
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        factory(require('jquery'));
+    } else {
+        factory(jQuery);
+    }
+}(function ($) {
     // Default settings
     var defaults = {
         className:     '',
@@ -358,4 +366,4 @@
             $.error('Ezdz error - Method ' +  options + ' does not exist.');
         }
     };
-})(jQuery);
+}));
