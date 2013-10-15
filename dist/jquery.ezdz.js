@@ -1,6 +1,6 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy] jQuery plugin
- // v0.2.0 - released 2013-10-16 00:14
+ // v0.2.0-wip - released 2013-10-15 12:58
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
@@ -8,7 +8,15 @@
  // http://jaysalvat.com/
  // ---------------------------------------------------------------------------*/
 
-(function($) {
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        factory(require('jquery'));
+    } else {
+        factory(jQuery);
+    }
+}(function ($) {
     // Default settings
     var defaults = {
         className:     '',
@@ -43,9 +51,12 @@
 
     // Main plugin
     $.ezdz = function(element, options) {
-        var self     = this,
-            settings = $.extend(true, {}, defaults, $.ezdz.defaults, options),
-            $input   = $(element);
+        this.settings = $.extend(true, {}, defaults, $.ezdz.defaults, options);
+        this.$input   = $(element);
+
+        var self      = this,
+            settings  = self.settings,
+            $input    = self.$input;
 
         if (!$input.is('input[type="file"]')) {
             $.error('Ezdz error - Must be apply to inputs type file.');
@@ -56,48 +67,6 @@
         if (!(window.File && window.FileList && window.FileReader)) {
             return;
         }
-
-        // Public: Inject a file or image in the preview
-        self.preview = function(path, callback) {
-            var basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
-                formatted = settings.format(basename),
-                $ezdz     = $input.parent('.' + settings.classes.main);
-
-            var img = new Image();
-            img.src = path;
-
-            // Is an image
-            img.onload = function() {
-                $ezdz.find('div').html($(img).fadeIn());
-
-                if ($.isFunction(callback)) {
-                     callback.apply(this);
-                }
-            };
-
-            // Is not an image
-            img.onerror = function() {
-                $ezdz.find('div').html('<span>' + formatted + '</span>');
-
-                if ($.isFunction(callback)) {
-                     callback.apply(this);
-                }
-            };
-
-            $ezdz.addClass(settings.classes.accept);
-        };
-
-        // Public: Destroy ezdz
-        self.destroy = function() {
-            $input.parent('.' + settings.classes.main).replaceWith($input);
-            $input.off('*.ezdz');
-            $input.data('ezdz', '');
-        };
-
-        // Public: Extend settings
-        self.options = function(values) {
-            $.extend(true, settings, values);
-        };
 
         // private: Init the plugin
         var init = function() {
@@ -123,7 +92,7 @@
             })
 
             .addClass(settings.className);
-            
+
             // Build the whole dropzone
             $input
                 .wrap($container)
@@ -140,7 +109,7 @@
 
             // Trigger the init callback
             if ($.isFunction(settings.init)) {
-                 settings.init.apply($ezdz, [ value ]);
+                 settings.init.apply($input, [ value ]);
             }
 
             // Events on the input
@@ -226,22 +195,24 @@
 
                     // Trigger the reject callback
                     if ($.isFunction(settings.reject)) {
-                         settings.reject.apply($ezdz, [ file, errors ]);
+                         settings.reject.apply($input, [ file, errors ]);
                     }
                     return false;
                 }
 
                 // Read the added file
-                var reader = new FileReader(file),
-                    img    = new Image();
+                var reader = new FileReader(file);
 
                 reader.readAsDataURL(file);
 
                 reader.onload = function(e) {
+                    var img = new Image(),
+                        isImage;
+
                     file.data = e.target.result;
                     img.src   = file.data;
 
-                    var isImage = (img.width && img.height);
+                    isImage = (img.width && img.height);
 
                     // Validator
                     if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
@@ -298,7 +269,7 @@
 
                         // Trigger the accept callback
                         if ($.isFunction(settings.accept)) {
-                             settings.accept.apply($ezdz, [ file ]);
+                             settings.accept.apply($input, [ file ]);
                         }
                     // The file is invalidated, so rejected
                     } else {
@@ -308,7 +279,7 @@
 
                         // Trigger the reject callback
                         if ($.isFunction(settings.reject)) {
-                             settings.reject.apply($ezdz, [ file, errors ]);
+                             settings.reject.apply($input, [ file, errors ]);
                         }
                     }
                 };
@@ -318,22 +289,81 @@
         init();
     };
 
-    $.fn.ezdz = function(options) {
-        var args = arguments;
+    // Inject a file or image in the preview
+    $.ezdz.prototype.preview = function(path, callback) {
+        var settings  = this.settings,
+            $input    = this.$input,
+            $ezdz     = $input.parent('.' + settings.classes.main);
+            basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
+            formatted = settings.format(basename);
 
-        return this.each(function() {
-            var plugin = $(this).data('ezdz');
+        var img = new Image();
+        img.src = path;
 
-            if (!plugin) {
-                return $(this).data('ezdz', new $.ezdz(this, options));
-            } if (plugin[options]) {
-                return plugin[options].apply(this, Array.prototype.slice.call(args, 1));
-            } else {
-                $.error('Ezdz error - Method ' +  options + ' does not exist.');
+        // Is an image
+        img.onload = function() {
+            $ezdz.find('div').html($(img).fadeIn());
+
+            if ($.isFunction(callback)) {
+                 callback.apply(this);
             }
-        });
+        };
+
+        // Is not an image
+        img.onerror = function() {
+            $ezdz.find('div').html('<span>' + formatted + '</span>');
+
+            if ($.isFunction(callback)) {
+                 callback.apply(this);
+            }
+        };
+
+        $ezdz.addClass(settings.classes.accept);
     };
 
-    $.ezdz.defaults = defaults;
+    // Destroy ezdz
+    $.ezdz.prototype.destroy = function() {
+        var settings = this.settings,
+            $input   = this.$input;
 
-})(jQuery);
+        $input.parent('.' + settings.classes.main).replaceWith($input);
+        $input.off('*.ezdz');
+        $input.data('ezdz', '');
+    };
+
+    // Extend settings
+    $.ezdz.prototype.options = function(options) {
+        var settings = this.settings;
+
+        if (!options) {
+            return settings;
+        }
+
+        $.extend(true, this.settings, options);
+    };
+
+    // Get input container
+    $.ezdz.prototype.container = function() {
+        var settings = this.settings,
+            $input   = this.$input;
+
+        return $input.parent('.' + settings.classes.main);
+    };
+
+    // Default options
+    $.ezdz.prototype.defaults = defaults;
+
+    // jQuery plugin
+    $.fn.ezdz = function(options) {
+        var args = arguments,
+            plugin = $(this).data('ezdz');
+
+        if (!plugin) {
+            return $(this).data('ezdz', new $.ezdz(this, options));
+        } if (plugin[options]) {
+            return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
+        } else {
+            $.error('Ezdz error - Method ' +  options + ' does not exist.');
+        }
+    };
+}));

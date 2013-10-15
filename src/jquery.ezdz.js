@@ -7,7 +7,15 @@
 // http://jaysalvat.com/
 // --------------------------------------------------------------------------*/
 
-(function($) {
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        factory(require('jquery'));
+    } else {
+        factory(jQuery);
+    }
+}(function ($) {
     // Default settings
     var defaults = {
         className:     '',
@@ -42,9 +50,12 @@
 
     // Main plugin
     $.ezdz = function(element, options) {
-        var self     = this,
-            settings = $.extend(true, {}, defaults, $.ezdz.defaults, options),
-            $input   = $(element);
+        this.settings = $.extend(true, {}, defaults, $.ezdz.defaults, options);
+        this.$input   = $(element);
+
+        var self      = this,
+            settings  = self.settings,
+            $input    = self.$input;
 
         if (!$input.is('input[type="file"]')) {
             $.error('Ezdz error - Must be apply to inputs type file.');
@@ -55,48 +66,6 @@
         if (!(window.File && window.FileList && window.FileReader)) {
             return;
         }
-
-        // Public: Inject a file or image in the preview
-        self.preview = function(path, callback) {
-            var basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
-                formatted = settings.format(basename),
-                $ezdz     = $input.parent('.' + settings.classes.main);
-
-            var img = new Image();
-            img.src = path;
-
-            // Is an image
-            img.onload = function() {
-                $ezdz.find('div').html($(img).fadeIn());
-
-                if ($.isFunction(callback)) {
-                     callback.apply(this);
-                }
-            };
-
-            // Is not an image
-            img.onerror = function() {
-                $ezdz.find('div').html('<span>' + formatted + '</span>');
-
-                if ($.isFunction(callback)) {
-                     callback.apply(this);
-                }
-            };
-
-            $ezdz.addClass(settings.classes.accept);
-        };
-
-        // Public: Destroy ezdz
-        self.destroy = function() {
-            $input.parent('.' + settings.classes.main).replaceWith($input);
-            $input.off('*.ezdz');
-            $input.data('ezdz', '');
-        };
-
-        // Public: Extend settings
-        self.options = function(values) {
-            $.extend(true, settings, values);
-        };
 
         // private: Init the plugin
         var init = function() {
@@ -122,7 +91,7 @@
             })
 
             .addClass(settings.className);
-            
+
             // Build the whole dropzone
             $input
                 .wrap($container)
@@ -139,7 +108,7 @@
 
             // Trigger the init callback
             if ($.isFunction(settings.init)) {
-                 settings.init.apply($ezdz, [ value ]);
+                 settings.init.apply($input, [ value ]);
             }
 
             // Events on the input
@@ -225,91 +194,95 @@
 
                     // Trigger the reject callback
                     if ($.isFunction(settings.reject)) {
-                         settings.reject.apply($ezdz, [ file, errors ]);
+                         settings.reject.apply($input, [ file, errors ]);
                     }
                     return false;
                 }
 
                 // Read the added file
-                var reader = new FileReader(file),
-                    img    = new Image();
+                var reader = new FileReader(file);
 
                 reader.readAsDataURL(file);
 
                 reader.onload = function(e) {
+                    var img = new Image(),
+                        isImage;
+
                     file.data = e.target.result;
                     img.src   = file.data;
 
-                    var isImage = (img.width && img.height);
+                    setTimeout(function() {
+                        isImage = (img.width && img.height);
 
-                    // Validator
-                    if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
-                        valid = false;
-                        errors.maxSize = true;
-                    }
-
-                    if (isImage) {
-                        file.width  = img.width;
-                        file.height = img.height;
-
-                        if (settings.validators.width && img.width != settings.validators.width) {
+                        // Validator
+                        if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
                             valid = false;
-                            errors.width = true;
+                            errors.maxSize = true;
                         }
 
-                        if (settings.validators.maxWidth && img.width > settings.validators.maxWidth) {
-                            valid = false;
-                            errors.maxWidth = true;
+                        if (isImage) {
+                            file.width  = img.width;
+                            file.height = img.height;
+
+                            if (settings.validators.width && img.width != settings.validators.width) {
+                                valid = false;
+                                errors.width = true;
+                            }
+
+                            if (settings.validators.maxWidth && img.width > settings.validators.maxWidth) {
+                                valid = false;
+                                errors.maxWidth = true;
+                            }
+
+                            if (settings.validators.minWidth && img.width < settings.validators.minWidth) {
+                                valid = false;
+                                errors.minWidth = true;
+                            }
+
+                            if (settings.validators.height && img.height != settings.validators.height) {
+                                valid = false;
+                                errors.height = true;
+                            }
+
+                            if (settings.validators.maxHeight && img.height > settings.validators.maxHeight) {
+                                valid = false;
+                                errors.maxHeight = true;
+                            }
+
+                            if (settings.validators.minHeight && img.height < settings.validators.minHeight) {
+                                valid = false;
+                                errors.minHeight = true;
+                            }
                         }
 
-                        if (settings.validators.minWidth && img.width < settings.validators.minWidth) {
-                            valid = false;
-                            errors.minWidth = true;
-                        }
+                        // The file is validated, so added to input
+                        if (valid === true) {
+                            $ezdz.find('img').remove();
 
-                        if (settings.validators.height && img.height != settings.validators.height) {
-                            valid = false;
-                            errors.height = true;
-                        }
+                            if (isImage && settings.previewImage === true) {
+                                $ezdz.find('div').html($(img).fadeIn());
+                            } else {
+                                $ezdz.find('div').html('<span>' + formatted + '</span>');
+                            }
 
-                        if (settings.validators.maxHeight && img.height > settings.validators.maxHeight) {
-                            valid = false;
-                            errors.maxHeight = true;
-                        }
+                            $ezdz.addClass(settings.classes.accept);
 
-                        if (settings.validators.minHeight && img.height < settings.validators.minHeight) {
-                            valid = false;
-                            errors.minHeight = true;
-                        }
-                    }
-
-                    // The file is validated, so added to input
-                    if (valid === true) {
-                        $ezdz.find('img').remove();
-
-                        if (isImage && settings.previewImage === true) {
-                            $ezdz.find('div').html($(img).fadeIn());
+                            // Trigger the accept callback
+                            if ($.isFunction(settings.accept)) {
+                                 settings.accept.apply($input, [ file ]);
+                            }
+                        // The file is invalidated, so rejected
                         } else {
-                            $ezdz.find('div').html('<span>' + formatted + '</span>');
+                            $input.val('');
+
+                            $ezdz.addClass(settings.classes.reject);
+
+                            // Trigger the reject callback
+                            if ($.isFunction(settings.reject)) {
+                                 settings.reject.apply($input, [ file, errors ]);
+                            }
                         }
-
-                        $ezdz.addClass(settings.classes.accept);
-
-                        // Trigger the accept callback
-                        if ($.isFunction(settings.accept)) {
-                             settings.accept.apply($ezdz, [ file ]);
-                        }
-                    // The file is invalidated, so rejected
-                    } else {
-                        $input.val('');
-
-                        $ezdz.addClass(settings.classes.reject);
-
-                        // Trigger the reject callback
-                        if ($.isFunction(settings.reject)) {
-                             settings.reject.apply($ezdz, [ file, errors ]);
-                        }
-                    }
+                    }, 1);
                 };
             });
         };
@@ -317,22 +290,81 @@
         init();
     };
 
-    $.fn.ezdz = function(options) {
-        var args = arguments;
+    // Inject a file or image in the preview
+    $.ezdz.prototype.preview = function(path, callback) {
+        var settings  = this.settings,
+            $input    = this.$input,
+            $ezdz     = $input.parent('.' + settings.classes.main);
+            basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
+            formatted = settings.format(basename);
 
-        return this.each(function() {
-            var plugin = $(this).data('ezdz');
+        var img = new Image();
+        img.src = path;
 
-            if (!plugin) {
-                return $(this).data('ezdz', new $.ezdz(this, options));
-            } if (plugin[options]) {
-                return plugin[options].apply(this, Array.prototype.slice.call(args, 1));
-            } else {
-                $.error('Ezdz error - Method ' +  options + ' does not exist.');
+        // Is an image
+        img.onload = function() {
+            $ezdz.find('div').html($(img).fadeIn());
+
+            if ($.isFunction(callback)) {
+                 callback.apply(this);
             }
-        });
+        };
+
+        // Is not an image
+        img.onerror = function() {
+            $ezdz.find('div').html('<span>' + formatted + '</span>');
+
+            if ($.isFunction(callback)) {
+                 callback.apply(this);
+            }
+        };
+
+        $ezdz.addClass(settings.classes.accept);
     };
 
-    $.ezdz.defaults = defaults;
+    // Destroy ezdz
+    $.ezdz.prototype.destroy = function() {
+        var settings = this.settings,
+            $input   = this.$input;
 
-})(jQuery);
+        $input.parent('.' + settings.classes.main).replaceWith($input);
+        $input.off('*.ezdz');
+        $input.data('ezdz', '');
+    };
+
+    // Extend settings
+    $.ezdz.prototype.options = function(options) {
+        var settings = this.settings;
+
+        if (!options) {
+            return settings;
+        }
+
+        $.extend(true, this.settings, options);
+    };
+
+    // Get input container
+    $.ezdz.prototype.container = function() {
+        var settings = this.settings,
+            $input   = this.$input;
+
+        return $input.parent('.' + settings.classes.main);
+    };
+
+    // Default options
+    $.ezdz.prototype.defaults = defaults;
+
+    // jQuery plugin
+    $.fn.ezdz = function(options) {
+        var args = arguments,
+            plugin = $(this).data('ezdz');
+
+        if (!plugin) {
+            return $(this).data('ezdz', new $.ezdz(this, options));
+        } if (plugin[options]) {
+            return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
+        } else {
+            $.error('Ezdz error - Method ' +  options + ' does not exist.');
+        }
+    };
+}));

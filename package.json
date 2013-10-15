@@ -1,8 +1,8 @@
 {
     "name": "ezdz",
-    "title": "Ezdz [izy-dizy] jQuery plugin",
+    "title": "Ezdz [izy-dizy]",
     "description": "A jQuery plugin to turn standard input type file into a nice drag&drop zone with validators and previews.",
-    "version": "0.2.0",
+    "version": "0.2.0-wip",
     "homepage": "https://github.com/jaysalvat/ezdz",
     "bugs": "https://github.com/jaysalvat/ezdz/issues",
     "keywords": [
@@ -30,16 +30,16 @@
     "devDependencies": {
         "grunt": "~0.4.1",
         "grunt-contrib-clean": "~0.5.0",
+        "grunt-contrib-compress": "~0.5.2",
         "grunt-contrib-concat": "~0.3.0",
         "grunt-contrib-copy": "~0.4.1",
         "grunt-contrib-jshint": "~0.6.4",
         "grunt-contrib-qunit": "~0.3.0",
         "grunt-contrib-uglify": "~0.2.4",
+        "grunt-exec": "~0.4",
         "grunt-recess": "~0.4.0",
         "grunt-sed": "~0.1",
-        "grunt-exec": "~0.4",
-        "semver": "~1.1.3",
-        "grunt-contrib-compress": "~0.5.2"
+        "semver": "~1.1.3"
     },
     "main": "dist/jquery.ezdz.js",
     "scripts": {
