@@ -118,6 +118,9 @@ module.exports = function(grunt) {
         },
 
         exec: {
+            gitHasDiff: {
+                cmd: 'test -z "$(git diff)"'
+            },
             gitIsClean: {
                 cmd: 'test -z "$(git status --porcelain)"'
             },
@@ -170,6 +173,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-recess');
 
+    grunt.registerTask('diff', [ 'exec:gitHasDiff' ]);
     grunt.registerTask('default', 'Default task', [ 'qunit:src', 'build' ]);
     grunt.registerTask('test', 'Run tests.', [ 'jshint', 'qunit:src' ]);
     grunt.registerTask('build', 'Build.', [ 'clean:dist', 'concat', 'uglify', 'recess', 'qunit:dist' ]);
