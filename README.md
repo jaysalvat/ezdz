@@ -1,7 +1,7 @@
 Ezdz [izy-dizy]
 ===============
 
-[![Build Status](https://travis-ci.org/jaysalvat/ezdz.png)](https://travis-ci.org/jaysalvat/buzz)
+[![Build Status](https://travis-ci.org/jaysalvat/ezdz.png)](https://travis-ci.org/jaysalvat/ezdz)
 
 Ezdz is a jQuery plugin to turn any standard input type file into a nice drag & drop zone with validators and previews.
 
