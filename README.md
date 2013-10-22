@@ -5,7 +5,7 @@ Ezdz [izy-dizy]
 
 Ezdz is a jQuery plugin to turn any standard input type file into a nice drag & drop zone with validators and previews.
 
-Ezdz uses HTML5 [File](http://www.w3.org/TR/FileAPI/), [Drag and Drop](http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html) API, so it works properly on modern browsers only. I've tested it on last version of Chrome, Firefox and Safari on MacOSX only. Feedbacks are welcomed.
+Ezdz uses HTML5 [File](http://www.w3.org/TR/FileAPI/), [Drag and Drop](http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html) API, so it works properly on modern browsers only. I've tested it on last version of Chrome, Firefox and Safari on MacOSX and IOS7 safari mobile only. Feedbacks are welcomed.
 
 Demo
 ----
@@ -180,7 +180,20 @@ As a setter:
 
 #### destroy
 
+Remove Ezdz from the input and get back to normal.
+
     $('[type="file"]').ezdz('destroy');
+    
+Functions
+---------
+    
+#### isBrowserCompatible
+
+Check if the browser is compatible with HTML5 api needed by Ezdz.
+
+    if ($.ezdz.isBrowserCompatible() === false) {
+        console.log('No ezdz for this browser. Standard input file only.');
+    }
 
 License
 -------
