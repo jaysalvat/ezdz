@@ -1,6 +1,6 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy]
- // v0.3.0-wip - released 2013-10-16 00:44
+ // v0.3.0-wip - released 2013-10-22 13:43
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
@@ -59,12 +59,11 @@
             $input    = self.$input;
 
         if (!$input.is('input[type="file"]')) {
-            $.error('Ezdz error - Must be apply to inputs type file.');
             return;
         }
 
         // Stop if not compatible with HTML5 file API
-        if (!(window.File && window.FileList && window.FileReader)) {
+        if (!$.ezdz.isBrowserCompatible()) {
             return;
         }
 
@@ -283,7 +282,7 @@
                                  settings.reject.apply($input, [ file, errors ]);
                             }
                         }
-                    }, 1);
+                    }, 250);
                 };
             });
         };
@@ -352,8 +351,13 @@
         return $input.parent('.' + settings.classes.main);
     };
 
+    // Is browser compatible
+    $.ezdz.isBrowserCompatible = function() {
+        return !!(window.File && window.FileList && window.FileReader);
+    };
+
     // Default options
-    $.ezdz.prototype.defaults = defaults;
+    $.ezdz.defaults = defaults;
 
     // jQuery plugin
     $.fn.ezdz = function(options) {
