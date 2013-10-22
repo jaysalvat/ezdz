@@ -1,0 +1,14 @@
+    body {
+      font: 12px Arial;
+      margin: 20px auto;
+      text-align: center;
+      width: 260px;
+    }
+
+    form  {
+      margin: 20px 0;
+    }
+
+    input[type="submit"] {
+        margin: 20px 0;
+    }

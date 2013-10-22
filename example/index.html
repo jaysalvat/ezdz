@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ezdz example</title>
+    <link rel="stylesheet" href="../dist/jquery.ezdz.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>Ezdz example</h1>
+    <p>Png or Jpeg, max 600x400</p>
+
+    <form action="" method="post" enctype="multipart/form-data">
+      <input type="file" accept="image/png, image/jpeg">
+
+      <input type="submit">
+    </form>
+
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="../dist/jquery.ezdz.min.js"></script>
+    <script>
+        $('[type="file"]').ezdz({
+            text: 'drop a picture',
+            validators: {
+                maxWidth:  600,
+                maxHeight: 400
+            },
+            reject: function(file, errors) {
+                if (errors.mimeType) {
+                    alert(file.name + ' must be an image.');
+                }
+
+                if (errors.maxWidth) {
+                    alert(file.name + ' must be width:600px max.');
+                }
+
+                if (errors.maxHeight) {
+                    alert(file.name + ' must be height:400px max.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
