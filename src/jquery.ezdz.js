@@ -356,7 +356,7 @@
     };
 
     // Default options
-    $.ezdz.prototype.defaults = defaults;
+    $.ezdz.defaults = defaults;
 
     // jQuery plugin
     $.fn.ezdz = function(options) {
