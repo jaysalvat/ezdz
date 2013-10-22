@@ -58,7 +58,6 @@
             $input    = self.$input;
 
         if (!$input.is('input[type="file"]')) {
-            $.error('Ezdz error - Must be apply to inputs type file.');
             return;
         }
 
@@ -282,7 +281,7 @@
                                  settings.reject.apply($input, [ file, errors ]);
                             }
                         }
-                    }, 1);
+                    }, 250);
                 };
             });
         };
