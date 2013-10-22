@@ -189,7 +189,7 @@ Functions
     
 #### isBrowserCompatible
 
-    Check if the browser is compatible with HTML5 api needed by Ezdz.
+Check if the browser is compatible with HTML5 api needed by Ezdz.
 
     if ($.ezdz.isBrowserCompatible() === false) {
         console.log('No ezdz for this browser. Standard input file only.');
