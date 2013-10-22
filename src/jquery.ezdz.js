@@ -62,7 +62,7 @@
         }
 
         // Stop if not compatible with HTML5 file API
-        if (!(window.File && window.FileList && window.FileReader)) {
+        if (!$.ezdz.isBrowserCompatible()) {
             return;
         }
 
@@ -348,6 +348,11 @@
             $input   = this.$input;
 
         return $input.parent('.' + settings.classes.main);
+    };
+
+    // Is browser compatible
+    $.ezdz.isBrowserCompatible = function() {
+        return !!(window.File && window.FileList && window.FileReader);
     };
 
     // Default options
