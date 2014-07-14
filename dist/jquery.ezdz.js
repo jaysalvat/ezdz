@@ -1,10 +1,10 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy]
- // v0.4.0 - released 2013-10-22 14:08
+ // v0.4.0 - released 2014-07-14 12:34
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
- // Copyright (C) 2013 Jay Salvat
+ // Copyright (C) 2014 Jay Salvat
  // http://jaysalvat.com/
  // ---------------------------------------------------------------------------*/
 
@@ -329,7 +329,7 @@
 
         $input.parent('.' + settings.classes.main).replaceWith($input);
         $input.off('*.ezdz');
-        $input.data('ezdz', '');
+        $input.removeData('ezdz');
     };
 
     // Extend settings

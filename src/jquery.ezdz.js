@@ -328,7 +328,7 @@
 
         $input.parent('.' + settings.classes.main).replaceWith($input);
         $input.off('*.ezdz');
-        $input.data('ezdz', '');
+        $input.removeData('ezdz');
     };
 
     // Extend settings
