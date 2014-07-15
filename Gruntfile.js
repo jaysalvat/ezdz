@@ -139,8 +139,8 @@ module.exports = function(grunt) {
             },
             gitPush: {
                 cmd: [
-                    'git push',
-                    'git push --tags'
+                    'git push origin master',
+                    'git push origin master --tags'
                 ].join(' && ')
             },
             publish: {
@@ -152,7 +152,7 @@ module.exports = function(grunt) {
                     'cp -r tmp releases/latest',
                     'git add releases/<%= version %> releases/latest',
                     'git commit -m "Add assets for v<%= version %>."',
-                    'git push gh-pages',
+                    'git push origin gh-pages',
                     'git checkout -',
                     'rm -rf tmp/'
                 ].join(' && ')
@@ -201,7 +201,7 @@ module.exports = function(grunt) {
             'exec:gitAdd',                  // Git add it
             'exec:gitCommit:' + version,    // Git commit it
             'exec:gitTag:' + version,       // Git add a new tag
-            'exec:gitPush',                 // Git push it th Github
+            'exec:gitPush',                 // Git push it to Github
             'publish'                       // Publish assets
         ]);
     });
