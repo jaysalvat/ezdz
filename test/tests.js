@@ -68,3 +68,10 @@
 
         ok(!$input.parent('.ezdz-dropzone').length, "ezdz container is destroyed");
     });
+
+    test('destroy should remove ezdz data', function() {
+        $input = $('[type="file"]');
+        $input.ezdz();
+        $input.ezdz('destroy');
+        ok(typeof $input.data('ezdz') === 'undefined', "ezdz data is removed");
+    });
