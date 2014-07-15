@@ -152,8 +152,9 @@ module.exports = function(grunt) {
                     'cp -r tmp releases/latest',
                     'git add releases/<%= version %> releases/latest',
                     'git commit -m "Add assets for v<%= version %>."',
-                    'git push',
-                    'git checkout -'
+                    'git push gh-pages',
+                    'git checkout -',
+                    'rm -rf tmp/'
                 ].join(' && ')
             }
         }
