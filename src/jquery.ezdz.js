@@ -6,9 +6,14 @@
  // Copyright (C) 2013 Jay Salvat
  // http://jaysalvat.com/
  // ----------------------------------------------------------------------------
- // Modified by Abby Janke - 2014
- // -bgPreview
- // -toggleItems
+ // Customized by Abby Janke
+ // 1. Added bgPreview
+ //      - Set to the class/id name of a div that you want to change the
+ //        background image of with the image preview.
+ // 2. Added toggleItem
+ //      - An array of items to toggle specific classes on.
+ /          toggleItems: { <id/class>: <whatToToggle>
+ //         ex: toggleItems: { 'button': 'hidden' }
  // --------------------------------------------------------------------------*/
 
 (function (factory) {
@@ -278,8 +283,7 @@
                                 if(jQuery.isEmptyObject(settings.toggleItems) === false) {
                                     jQuery.each(settings.toggleItems, function(index, item) {
                                         $(index).toggleClass(item);
-                                    })
-
+                                    });
                                 }
 
                                 $ezdz.addClass(settings.classes.accept);
