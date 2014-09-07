@@ -53,6 +53,10 @@ Set if a image preview is displayed when an image is dropped. By default "true".
 
 Set a link to a previously uploaded file. By default none.
 
+#### bgPreview
+
+Set a class to use as a background preview instead of just a preview image (does not require previewImage required)
+
 #### classes
 
 Ezdz classes. By default they are:
@@ -96,6 +100,16 @@ Self-explanatory I guess.
 Allowed mime-types are defined in the input tag with a standard ``accept``attribute.
 
     <input type="file" name="logo" accept="image/png, image/jpeg" />
+
+#### toggleItems
+
+Toggle specific classes on items, great for only display buttons once file submitted.
+
+    { classes: {
+            '.uploadButton':   'hidden',
+        }
+    }
+    
 
 Callbacks
 ---------
