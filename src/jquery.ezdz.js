@@ -1,11 +1,20 @@
 /* ----------------------------------------------------------------------------
-// Ezdz [izy-dizy]
-// Licensed under the MIT license.
-// http://github.com/jaysalvat/ezdz/
-// ----------------------------------------------------------------------------
-// Copyright (C) 2013 Jay Salvat
-// http://jaysalvat.com/
-// --------------------------------------------------------------------------*/
+ // Ezdz [izy-dizy]
+ // Licensed under the MIT license.
+ // http://github.com/jaysalvat/ezdz/
+ // ----------------------------------------------------------------------------
+ // Copyright (C) 2013 Jay Salvat
+ // http://jaysalvat.com/
+ // ----------------------------------------------------------------------------
+ // Customized by Abby Janke
+ // 1. Added bgPreview
+ //      - Set to the class/id name of a div that you want to change the
+ //        background image of with the image preview.
+ // 2. Added toggleItem
+ //      - An array of items to toggle specific classes on.
+ /          toggleItems: { <id/class>: <whatToToggle>
+ //         ex: toggleItems: { 'button': 'hidden' }
+ // --------------------------------------------------------------------------*/
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
@@ -18,6 +27,8 @@
 }(function ($) {
     // Default settings
     var defaults = {
+        bgPreview:     false,
+        toggleItems:    {},
         className:     '',
         text:          'Drop a file',
         previewImage:  true,
@@ -73,23 +84,23 @@
             // Build the container
             $container = $('<div class="' + settings.classes.main + '" />')
 
-            .on('dragover.ezdz', function() {
-                $(this).addClass(settings.classes.enter);
+                .on('dragover.ezdz', function() {
+                    $(this).addClass(settings.classes.enter);
 
-                if ($.isFunction(settings.enter)) {
-                     settings.enter.apply(this);
-                }
-            })
+                    if ($.isFunction(settings.enter)) {
+                        settings.enter.apply(this);
+                    }
+                })
 
-            .on('dragleave.ezdz', function() {
-                $(this).removeClass(settings.classes.enter);
+                .on('dragleave.ezdz', function() {
+                    $(this).removeClass(settings.classes.enter);
 
-                if ($.isFunction(settings.leaved)) {
-                    settings.leaved.apply(this);
-                }
-            })
+                    if ($.isFunction(settings.leaved)) {
+                        settings.leaved.apply(this);
+                    }
+                })
 
-            .addClass(settings.className);
+                .addClass(settings.className);
 
             // Build the whole dropzone
             $input
@@ -107,38 +118,38 @@
 
             // Trigger the init callback
             if ($.isFunction(settings.init)) {
-                 settings.init.apply($input, [ value ]);
+                settings.init.apply($input, [ value ]);
             }
 
             // Events on the input
             $input
 
-            .on('focus.ezdz', function() {
-                $ezdz.addClass(settings.classes.focus);
-            })
+                .on('focus.ezdz', function() {
+                    $ezdz.addClass(settings.classes.focus);
+                })
 
-            .on('blur.ezdz', function() {
-                $ezdz.removeClass(settings.classes.focus);
-            })
+                .on('blur.ezdz', function() {
+                    $ezdz.removeClass(settings.classes.focus);
+                })
 
-            .on('change.ezdz', function() {
-                var file = this.files[0];
+                .on('change.ezdz', function() {
+                    var file = this.files[0];
 
-                // No file, so user has cancelled
-                if (!file) {
-                    return;
-                }
+                    // No file, so user has cancelled
+                    if (!file) {
+                        return;
+                    }
 
-                // Info about the dropped or selected file
-                var basename  = file.name.replace(/\\/g,'/').replace( /.*\//, ''),
-                    extension = file.name.split('.').pop(),
-                    formatted = settings.format(basename);
+                    // Info about the dropped or selected file
+                    var basename  = file.name.replace(/\\/g,'/').replace( /.*\//, ''),
+                        extension = file.name.split('.').pop(),
+                        formatted = settings.format(basename);
 
-                file.extension = extension;
+                    file.extension = extension;
 
-                // Mime-Types
-                var allowed  = $input.attr('accept'),
-                    accepted = false;
+                    // Mime-Types
+                    var allowed  = $input.attr('accept'),
+                        accepted = false;
                     valid    = true;
                     errors   = {
                         'mimeType':  false,
@@ -151,139 +162,151 @@
                         'maxHeight': false
                     };
 
-                // Check the accepted Mime-Types from the input file
-                if (allowed) {
-                    var types = allowed.split(/[,|]/);
+                    // Check the accepted Mime-Types from the input file
+                    if (allowed) {
+                        var types = allowed.split(/[,|]/);
 
-                    $.each(types, function(i, type) {
-                        type = $.trim(type);
+                        $.each(types, function(i, type) {
+                            type = $.trim(type);
 
-                        if (file.type == type) {
-                            accepted = true;
-                            return false;
-                        }
-
-                        // Mime-Type with wildcards ex. image/*
-                        if (type.indexOf('/*') !== false) {
-                            var a = type.replace('/*', ''),
-                                b = file.type.replace(/(\/.*)$/g, '');
-
-                            if (a === b) {
+                            if (file.type == type) {
                                 accepted = true;
                                 return false;
                             }
-                        }
-                    });
 
-                    if (accepted === false) {
-                        errors.mimeType = true;
+                            // Mime-Type with wildcards ex. image/*
+                            if (type.indexOf('/*') !== false) {
+                                var a = type.replace('/*', ''),
+                                    b = file.type.replace(/(\/.*)$/g, '');
+
+                                if (a === b) {
+                                    accepted = true;
+                                    return false;
+                                }
+                            }
+                        });
+
+                        if (accepted === false) {
+                            errors.mimeType = true;
+                        }
+                    } else {
+                        accepted = true;
                     }
-                } else {
-                    accepted = true;
-                }
 
-                // Reset the accepted / rejected classes
-                $ezdz.removeClass(settings.classes.reject + ' ' + settings.classes.accept);
+                    // Reset the accepted / rejected classes
+                    $ezdz.removeClass(settings.classes.reject + ' ' + settings.classes.accept);
 
-                // If the Mime-Type is not accepted
-                if (accepted !== true) {
-                    $input.val('');
+                    // If the Mime-Type is not accepted
+                    if (accepted !== true) {
+                        $input.val('');
 
-                    $ezdz.addClass(settings.classes.reject);
+                        $ezdz.addClass(settings.classes.reject);
 
-                    // Trigger the reject callback
-                    if ($.isFunction(settings.reject)) {
-                         settings.reject.apply($input, [ file, errors ]);
+                        // Trigger the reject callback
+                        if ($.isFunction(settings.reject)) {
+                            settings.reject.apply($input, [ file, errors ]);
+                        }
+                        return false;
                     }
-                    return false;
-                }
 
-                // Read the added file
-                var reader = new FileReader(file);
+                    // Read the added file
+                    var reader = new FileReader(file);
 
-                reader.readAsDataURL(file);
+                    reader.readAsDataURL(file);
 
-                reader.onload = function(e) {
-                    var img = new Image(),
-                        isImage;
+                    reader.onload = function(e) {
+                        var img = new Image(),
+                            isImage;
 
-                    file.data = e.target.result;
-                    img.src   = file.data;
+                        file.data = e.target.result;
+                        img.src   = file.data;
 
-                    setTimeout(function() {
-                        isImage = (img.width && img.height);
+                        setTimeout(function() {
+                            isImage = (img.width && img.height);
 
-                        // Validator
-                        if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
-                            valid = false;
-                            errors.maxSize = true;
-                        }
-
-                        if (isImage) {
-                            file.width  = img.width;
-                            file.height = img.height;
-
-                            if (settings.validators.width && img.width != settings.validators.width) {
+                            // Validator
+                            if (settings.validators.maxSize && file.size > settings.validators.maxSize) {
                                 valid = false;
-                                errors.width = true;
+                                errors.maxSize = true;
                             }
 
-                            if (settings.validators.maxWidth && img.width > settings.validators.maxWidth) {
-                                valid = false;
-                                errors.maxWidth = true;
+                            if (isImage) {
+                                file.width  = img.width;
+                                file.height = img.height;
+
+                                if (settings.validators.width && img.width != settings.validators.width) {
+                                    valid = false;
+                                    errors.width = true;
+                                }
+
+                                if (settings.validators.maxWidth && img.width > settings.validators.maxWidth) {
+                                    valid = false;
+                                    errors.maxWidth = true;
+                                }
+
+                                if (settings.validators.minWidth && img.width < settings.validators.minWidth) {
+                                    valid = false;
+                                    errors.minWidth = true;
+                                }
+
+                                if (settings.validators.height && img.height != settings.validators.height) {
+                                    valid = false;
+                                    errors.height = true;
+                                }
+
+                                if (settings.validators.maxHeight && img.height > settings.validators.maxHeight) {
+                                    valid = false;
+                                    errors.maxHeight = true;
+                                }
+
+                                if (settings.validators.minHeight && img.height < settings.validators.minHeight) {
+                                    valid = false;
+                                    errors.minHeight = true;
+                                }
                             }
 
-                            if (settings.validators.minWidth && img.width < settings.validators.minWidth) {
-                                valid = false;
-                                errors.minWidth = true;
-                            }
+                            // The file is validated, so added to input
+                            if (valid === true) {
+                                $ezdz.find('img').remove();
 
-                            if (settings.validators.height && img.height != settings.validators.height) {
-                                valid = false;
-                                errors.height = true;
-                            }
+                                if (isImage && settings.previewImage === true) {
+                                    $ezdz.find('div').html($(img).fadeIn());
+                                } else {
+                                    $ezdz.find('div').html('<span>' + formatted + '</span>');
+                                }
 
-                            if (settings.validators.maxHeight && img.height > settings.validators.maxHeight) {
-                                valid = false;
-                                errors.maxHeight = true;
-                            }
+                                if(isImage && settings.bgPreview !== false) {
+                                    $(settings.bgPreview).css({'background-image': 'url('+img.src+')'});
+                                    $('.jumbotron').css({'background': 'transparent'});
+                                }
 
-                            if (settings.validators.minHeight && img.height < settings.validators.minHeight) {
-                                valid = false;
-                                errors.minHeight = true;
-                            }
-                        }
+                                if(jQuery.isEmptyObject(settings.toggleItems) == false) {
+                                    jQuery.each(settings.toggleItems, function(index, item) {
+                                        $(index).toggleClass(item);
+                                    })
 
-                        // The file is validated, so added to input
-                        if (valid === true) {
-                            $ezdz.find('img').remove();
+                                }
 
-                            if (isImage && settings.previewImage === true) {
-                                $ezdz.find('div').html($(img).fadeIn());
+                                $ezdz.addClass(settings.classes.accept);
+
+                                // Trigger the accept callback
+                                if ($.isFunction(settings.accept)) {
+                                    settings.accept.apply($input, [ file ]);
+                                }
+                                // The file is invalidated, so rejected
                             } else {
-                                $ezdz.find('div').html('<span>' + formatted + '</span>');
+                                $input.val('');
+
+                                $ezdz.addClass(settings.classes.reject);
+
+                                // Trigger the reject callback
+                                if ($.isFunction(settings.reject)) {
+                                    settings.reject.apply($input, [ file, errors ]);
+                                }
                             }
-
-                            $ezdz.addClass(settings.classes.accept);
-
-                            // Trigger the accept callback
-                            if ($.isFunction(settings.accept)) {
-                                 settings.accept.apply($input, [ file ]);
-                            }
-                        // The file is invalidated, so rejected
-                        } else {
-                            $input.val('');
-
-                            $ezdz.addClass(settings.classes.reject);
-
-                            // Trigger the reject callback
-                            if ($.isFunction(settings.reject)) {
-                                 settings.reject.apply($input, [ file, errors ]);
-                            }
-                        }
-                    }, 250);
-                };
-            });
+                        }, 250);
+                    };
+                });
         };
 
         init();
@@ -294,7 +317,7 @@
         var settings  = this.settings,
             $input    = this.$input,
             $ezdz     = $input.parent('.' + settings.classes.main);
-            basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
+        basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
             formatted = settings.format(basename);
 
         var img = new Image();
@@ -305,7 +328,7 @@
             $ezdz.find('div').html($(img).fadeIn());
 
             if ($.isFunction(callback)) {
-                 callback.apply(this);
+                callback.apply(this);
             }
         };
 
@@ -314,7 +337,7 @@
             $ezdz.find('div').html('<span>' + formatted + '</span>');
 
             if ($.isFunction(callback)) {
-                 callback.apply(this);
+                callback.apply(this);
             }
         };
 
