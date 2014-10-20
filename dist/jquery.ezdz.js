@@ -1,6 +1,6 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy]
- // v0.4.1 - released 2014-07-15 12:58
+ // v0.4.2 - released 2014-10-20 13:45
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
@@ -8,7 +8,11 @@
  // http://jaysalvat.com/
  // ---------------------------------------------------------------------------*/
 
+/* global define: true, require: true, jQuery */
+
 (function (factory) {
+    "use strict";
+
     if (typeof define === 'function' && define.amd) {
         define(['jquery'], factory);
     } else if (typeof exports === 'object') {
@@ -17,6 +21,8 @@
         factory(jQuery);
     }
 }(function ($) {
+    "use strict";
+
     // Default settings
     var defaults = {
         className:     '',
@@ -139,8 +145,8 @@
 
                 // Mime-Types
                 var allowed  = $input.attr('accept'),
-                    accepted = false;
-                    valid    = true;
+                    accepted = false,
+                    valid    = true,
                     errors   = {
                         'mimeType':  false,
                         'maxSize':   false,
@@ -159,7 +165,7 @@
                     $.each(types, function(i, type) {
                         type = $.trim(type);
 
-                        if (file.type == type) {
+                        if (file.type === type) {
                             accepted = true;
                             return false;
                         }
@@ -224,7 +230,7 @@
                             file.width  = img.width;
                             file.height = img.height;
 
-                            if (settings.validators.width && img.width != settings.validators.width) {
+                            if (settings.validators.width && img.width !== settings.validators.width) {
                                 valid = false;
                                 errors.width = true;
                             }
@@ -239,7 +245,7 @@
                                 errors.minWidth = true;
                             }
 
-                            if (settings.validators.height && img.height != settings.validators.height) {
+                            if (settings.validators.height && img.height !== settings.validators.height) {
                                 valid = false;
                                 errors.height = true;
                             }
@@ -294,7 +300,7 @@
     $.ezdz.prototype.preview = function(path, callback) {
         var settings  = this.settings,
             $input    = this.$input,
-            $ezdz     = $input.parent('.' + settings.classes.main);
+            $ezdz     = $input.parent('.' + settings.classes.main),
             basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
             formatted = settings.format(basename);
 
