@@ -58,7 +58,6 @@
     $.ezdz = function(element, options) {
         this.settings = $.extend(true, {}, defaults, $.ezdz.defaults, options);
         this.$input   = $(element);
-
         var self      = this,
             settings  = self.settings,
             $input    = self.$input;
@@ -367,14 +366,18 @@
     // jQuery plugin
     $.fn.ezdz = function(options) {
         var args = arguments,
+            plugin;
+
+        return this.each(function () {
             plugin = $(this).data('ezdz');
 
-        if (!plugin) {
-            return $(this).data('ezdz', new $.ezdz(this, options));
-        } if (plugin[options]) {
-            return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
-        } else {
-            $.error('Ezdz error - Method ' +  options + ' does not exist.');
-        }
+            if (!plugin) {
+                return $(this).data('ezdz', new $.ezdz(this, options));
+            } if (plugin[options]) {
+                return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
+            } else {
+                $.error('Ezdz error - Method ' +  options + ' does not exist.');
+            }
+        });
     };
 }));
