@@ -1,6 +1,6 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy]
- // v0.4.2 - released 2014-10-20 13:45
+ // v0.4.3 - released 2014-12-16 11:29
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
@@ -59,7 +59,6 @@
     $.ezdz = function(element, options) {
         this.settings = $.extend(true, {}, defaults, $.ezdz.defaults, options);
         this.$input   = $(element);
-
         var self      = this,
             settings  = self.settings,
             $input    = self.$input;
@@ -164,6 +163,11 @@
 
                     $.each(types, function(i, type) {
                         type = $.trim(type);
+
+                        if ('.' + extension === type) {
+                            accepted = true;
+                            return false;
+                        }
 
                         if (file.type === type) {
                             accepted = true;
@@ -368,14 +372,18 @@
     // jQuery plugin
     $.fn.ezdz = function(options) {
         var args = arguments,
+            plugin;
+
+        return this.each(function () {
             plugin = $(this).data('ezdz');
 
-        if (!plugin) {
-            return $(this).data('ezdz', new $.ezdz(this, options));
-        } if (plugin[options]) {
-            return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
-        } else {
-            $.error('Ezdz error - Method ' +  options + ' does not exist.');
-        }
+            if (!plugin) {
+                return $(this).data('ezdz', new $.ezdz(this, options));
+            } if (plugin[options]) {
+                return plugin[options].apply(plugin, Array.prototype.slice.call(args, 1));
+            } else {
+                $.error('Ezdz error - Method ' +  options + ' does not exist.');
+            }
+        });
     };
 }));
