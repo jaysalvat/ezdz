@@ -163,6 +163,11 @@
                     $.each(types, function(i, type) {
                         type = $.trim(type);
 
+                        if ('.' + extension === type) {
+                            accepted = true;
+                            return false;
+                        }
+
                         if (file.type === type) {
                             accepted = true;
                             return false;
