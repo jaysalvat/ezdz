@@ -43,7 +43,11 @@ Or go to the [ezdz Rails gem page](https://github.com/YourCursus/ezdz-rails) for
 
 And apply Ezdz to your inputs type file.
 
-    $('input[type="file"]').ezdz();
+## Usage
+
+```javascript
+$('input[type="file"]').ezdz();
+```
 
 ## Settings
 
@@ -103,12 +107,13 @@ Self-explanatory I guess.
 
 #### mime-types
 
-Allowed mime-types are defined in the input tag with a standard ``accept``attribute.
+Allowed mime-types are defined in the input tag with a standard `accept` attribute.
 
-    <input type="file" name="logo" accept="image/png, image/jpeg" />
+```html
+<input type="file" name="logo" accept="image/png, image/jpeg" />
+```
 
 ## Callbacks
-
 
 #### init
 
@@ -155,13 +160,15 @@ Called before displaying the filename in the preview.
 
 Settings can be set for all instances.
 
-    $.ezdz.default = {
-        validators: {
-            maxWidth: 600,
-            maxHeight: 400,
-            maxSize: 1000000
-        }
+```javascript
+$.ezdz.default = {
+    validators: {
+        maxWidth: 600,
+        maxHeight: 400,
+        maxSize: 1000000
     }
+}
+```
 
 ## Methods
 
@@ -169,7 +176,9 @@ Settings can be set for all instances.
 
 Inject a preview in the dropzone.
 
-    $('[type="file"]').ezdz('preview', 'img/previously-uploaded-logo.png');
+```javascript
+$('[type="file"]').ezdz('preview', 'img/previously-uploaded-logo.png');
+```
 
 #### options
 
@@ -177,31 +186,39 @@ Get or set the settings.
 
 As a getter:
 
-    var options = $('[type="file"]').ezdz('options');
+```javascript
+var options = $('[type="file"]').ezdz('options');
+```
 
 As a setter:
 
-    $('[type="file"]').ezdz('options', {
-        validators: {
-            maxSize: 10000
-        }
-    });
+```javascript
+$('[type="file"]').ezdz('options', {
+    validators: {
+        maxSize: 10000
+    }
+});
+```
 
 #### destroy
 
 Remove Ezdz from the input and get back to normal.
 
-    $('[type="file"]').ezdz('destroy');
-    
+```javascript
+$('[type="file"]').ezdz('destroy');
+```
+
 ## Functions
     
 #### isBrowserCompatible
 
 Check if the browser is compatible with HTML5 api needed by Ezdz.
 
-    if ($.ezdz.isBrowserCompatible() === false) {
-        console.log('No ezdz for this browser. Standard input file only.');
-    }
+```javascript
+if ($.ezdz.isBrowserCompatible() === false) {
+    console.log('No ezdz for this browser. Standard input file only.');
+}
+```
 
 ## License
 
