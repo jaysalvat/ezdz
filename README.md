@@ -1,5 +1,4 @@
-Ezdz [izy-dizy]
-===============
+# Ezdz [izy-dizy]
 
 [![Build Status](https://travis-ci.org/jaysalvat/ezdz.png)](https://travis-ci.org/jaysalvat/ezdz)
 
@@ -7,35 +6,46 @@ Ezdz is a jQuery plugin to turn any standard input type file into a nice drag & 
 
 Ezdz uses HTML5 [File](http://www.w3.org/TR/FileAPI/), [Drag and Drop](http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html) API, so it works properly on modern browsers only. I've tested it on last version of Chrome, Firefox and Safari on MacOSX and IOS7 safari mobile only. Feedbacks are welcomed.
 
-Demo
-----
+## Demo
 
 Ezdz is in an early stage of development. Some demos are coming... Meanwhile please check [a quick demo on Codepen](http://codepen.io/jaysalvat/full/wjFcn).
 Here is a **screenshot** — Hey! Don't drag/drop files below, it's just a screenshot!
 
 ![screenshot](http://jaysalvat.github.io/ezdz/img/ezdz.png "Ezdz dropzone screenshot")
 
-Getting Started
----------------
+## Getting Started
 
-Include [jQuery](http://code.jquery.com/jquery.min.js).
+#### Standalone
 
-    <script src="jquery.min.js"></script>
+Include [jQuery](http://code.jquery.com/jquery.min.js) and Ezdz script.
+
+```html
+<script src="jquery.min.js"></script>
+<script src="ezdz/dist/jquery.ezdz.min.js"></script>
+```
 
 Include Ezdz styles.
 
-    <link rel="stylesheet" href="ezdz/dist/jquery.ezdz.min.css">
+```html
+<link rel="stylesheet" href="ezdz/dist/jquery.ezdz.min.css">
+```
 
-Include Ezdz script.
+#### Rails
 
-    <script src="ezdz/dist/jquery.ezdz.min.js"></script>
+To use Switchery in your rails app, add this to your Gemfile:
+
+```
+gem 'ezdz-rails'
+```
+
+Or go to the [ezdz Rails gem page](https://github.com/YourCursus/ezdz-rails) for more info, documentation and instructions.
+
 
 And apply Ezdz to your inputs type file.
 
     $('input[type="file"]').ezdz();
 
-Settings
---------
+## Settings
 
 #### className
 
@@ -97,8 +107,8 @@ Allowed mime-types are defined in the input tag with a standard ``accept``attrib
 
     <input type="file" name="logo" accept="image/png, image/jpeg" />
 
-Callbacks
----------
+## Callbacks
+
 
 #### init
 
@@ -153,8 +163,7 @@ Settings can be set for all instances.
         }
     }
 
-Methods
--------
+## Methods
 
 #### preview
 
@@ -184,8 +193,7 @@ Remove Ezdz from the input and get back to normal.
 
     $('[type="file"]').ezdz('destroy');
     
-Functions
----------
+## Functions
     
 #### isBrowserCompatible
 
@@ -195,8 +203,7 @@ Check if the browser is compatible with HTML5 api needed by Ezdz.
         console.log('No ezdz for this browser. Standard input file only.');
     }
 
-License
--------
+## License
 
 **The MIT License (MIT)**
 
