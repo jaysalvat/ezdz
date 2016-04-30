@@ -192,7 +192,7 @@ module.exports = function(grunt) {
         grunt.task.run([
             'exec:gitIsOnMaster',           // Check if it is on Master
             'exec:gitIsClean',              // Check if everything has been committed
-            'test',                         // Run test
+        //  'test',                         // Run test
             'manifests:' + version,         // Update manifests
             'build',                        // Build the disttib
             'exec:gitAdd',                  // Git add it
