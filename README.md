@@ -52,6 +52,9 @@ Set if a image preview is displayed when an image is dropped. By default "true".
 #### value
 
 Set a link to a previously uploaded file. By default none.
+This value can also be set in the element.
+
+```<input type="file" name="file" data-value="img/previously-uploaded-logo.png" />```
 
 #### classes
 
@@ -162,6 +165,10 @@ Inject a preview in the dropzone.
 
     $('[type="file"]').ezdz('preview', 'img/previously-uploaded-logo.png');
 
+Set to ```null``` the preview is removed.
+
+    $('[type="file"]').ezdz('preview', null);
+
 #### options
 
 Get or set the settings.
@@ -183,10 +190,10 @@ As a setter:
 Remove Ezdz from the input and get back to normal.
 
     $('[type="file"]').ezdz('destroy');
-    
+
 Functions
 ---------
-    
+
 #### isBrowserCompatible
 
 Check if the browser is compatible with HTML5 api needed by Ezdz.

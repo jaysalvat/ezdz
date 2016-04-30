@@ -304,8 +304,21 @@
         var settings  = this.settings,
             $input    = this.$input,
             $ezdz     = $input.parent('.' + settings.classes.main),
-            basename  = path.replace(/\\/g,'/').replace( /.*\//, ''),
+            basename  = (path || '').replace(/\\/g,'/').replace( /.*\//, ''),
             formatted = settings.format(basename);
+
+        if (!path) {
+            $ezdz
+                .removeClass([
+                    settings.classes.enter,
+                    settings.classes.reject,
+                    settings.classes.accept
+                ].join(' '))
+                .find('div').html(settings.text);
+
+            $input.val('');
+            return;
+        }
 
         var img = new Image();
         img.src = path;
