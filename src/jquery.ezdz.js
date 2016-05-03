@@ -197,6 +197,13 @@
 
                 // If the Mime-Type is not accepted
                 if (accepted !== true) {
+                    var dropzone = $ezdz.find('div').html();
+
+                    // If the dropzone have a preview
+                    if (dropzone != settings.text) {
+                        $ezdz.find('div').html(settings.text);
+                    }
+
                     $input.val('');
 
                     $ezdz.addClass(settings.classes.reject);
@@ -282,6 +289,13 @@
                             }
                         // The file is invalidated, so rejected
                         } else {
+                            var dropzone = $ezdz.find('div').html();
+
+                            // If the dropzone have a preview
+                            if (dropzone != settings.text) {
+                                $ezdz.find('div').html(settings.text);
+                            }
+
                             $input.val('');
 
                             $ezdz.addClass(settings.classes.reject);
