@@ -198,8 +198,8 @@
                 // If the Mime-Type is not accepted
                 if (accepted !== true) {
                     $input.val('');
-
                     $ezdz.addClass(settings.classes.reject);
+                    self.preview(null);
 
                     // Trigger the reject callback
                     if ($.isFunction(settings.reject)) {
@@ -283,8 +283,8 @@
                         // The file is invalidated, so rejected
                         } else {
                             $input.val('');
-
                             $ezdz.addClass(settings.classes.reject);
+                            self.preview(null);
 
                             // Trigger the reject callback
                             if ($.isFunction(settings.reject)) {
