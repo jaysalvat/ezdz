@@ -1,6 +1,6 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy]
- // v0.5.0 - released 2016-04-30 17:30
+ // v0.5.1 - released 2016-05-10 14:52
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
@@ -199,8 +199,8 @@
                 // If the Mime-Type is not accepted
                 if (accepted !== true) {
                     $input.val('');
-
                     $ezdz.addClass(settings.classes.reject);
+                    self.preview(null);
 
                     // Trigger the reject callback
                     if ($.isFunction(settings.reject)) {
@@ -284,8 +284,8 @@
                         // The file is invalidated, so rejected
                         } else {
                             $input.val('');
-
                             $ezdz.addClass(settings.classes.reject);
+                            self.preview(null);
 
                             // Trigger the reject callback
                             if ($.isFunction(settings.reject)) {
