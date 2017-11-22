@@ -78,11 +78,13 @@
             // Build the container
             $container = $('<div class="' + settings.classes.main + '" />')
 
-            .on('dragover.ezdz', function() {
-                $(this).addClass(settings.classes.enter);
-
-                if ($.isFunction(settings.enter)) {
-                     settings.enter.apply(this);
+            .on('dragover.ezdz', function(e) {
+                var dt = e.originalEvent.dataTransfer;
+                if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
+                    $(this).addClass(settings.classes.enter);
+                    if ($.isFunction(settings.enter)) {
+                        settings.enter.apply(this);
+                    }
                 }
             })
 
