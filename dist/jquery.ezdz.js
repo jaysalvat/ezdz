@@ -1,10 +1,10 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy]
- // v0.5.1 - released 2016-05-10 14:52
+ // v0.6.0 - released 2017-12-30 20:49
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
- // Copyright (C) 2016 Jay Salvat
+ // Copyright (C) 2017 Jay Salvat
  // http://jaysalvat.com/
  // ---------------------------------------------------------------------------*/
 
@@ -79,11 +79,16 @@
             // Build the container
             $container = $('<div class="' + settings.classes.main + '" />')
 
-            .on('dragover.ezdz', function() {
-                $(this).addClass(settings.classes.enter);
+            .on('dragover.ezdz', function(e) {
+                var dt = e.originalEvent.dataTransfer;
+                alert('ok');
+                console.log(dt.types);
+                if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
+                    $(this).addClass(settings.classes.enter);
 
-                if ($.isFunction(settings.enter)) {
-                     settings.enter.apply(this);
+                    if ($.isFunction(settings.enter)) {
+                        settings.enter.apply(this);
+                    }
                 }
             })
 

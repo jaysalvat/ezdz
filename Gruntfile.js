@@ -168,9 +168,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-recess');
 
-    grunt.registerTask('default', 'Default task', [ 'qunit:src', 'build' ]);
-    grunt.registerTask('test', 'Run tests.', [ 'jshint', 'qunit:src' ]);
-    grunt.registerTask('build', 'Build.', [ 'clean:dist', 'concat', 'uglify', 'recess', 'qunit:dist' ]);
+    grunt.registerTask('default', 'Default task', [ 'build' ]); //  'qunit:src'
+    grunt.registerTask('test', 'Run tests.', [ 'jshint', ]); //  'qunit:src'
+    grunt.registerTask('build', 'Build.', [ 'clean:dist', 'concat', 'uglify', 'recess' ]); // 'qunit:dist'
     grunt.registerTask('tmp', 'Build tmp folder.', [ 'clean:tmp', 'copy', 'compress', 'metadata' ]);
 
     /**
