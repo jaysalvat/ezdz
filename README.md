@@ -1,8 +1,6 @@
 Ezdz [izy-dizy]
 ===============
 
-[![Build Status](https://travis-ci.org/jaysalvat/ezdz.png)](https://travis-ci.org/jaysalvat/ezdz)
-
 Ezdz is a jQuery plugin to turn any standard input type file into a nice drag & drop zone with validators and previews.
 
 Ezdz uses HTML5 [File](http://www.w3.org/TR/FileAPI/), [Drag and Drop](http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html) API, so it works properly on modern browsers only. I've tested it on last version of Chrome, Firefox and Safari on MacOSX and IOS7 safari mobile only. Feedbacks are welcomed.
@@ -33,6 +31,14 @@ Include Ezdz script.
 And apply Ezdz to your inputs type file.
 
     $('input[type="file"]').ezdz();
+
+#### Rails
+
+To use Switchery in your Rails app, add this to your Gemfile. See [ezdz Rails Gem page](https://github.com/YourCursus/ezdz-rails).
+
+```
+gem 'ezdz-rails'
+```
 
 Settings
 --------
@@ -207,7 +213,7 @@ License
 
 **The MIT License (MIT)**
 
-Copyright (c) 2017 Jay Salvat
+Copyright (c) 2018 Jay Salvat
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
