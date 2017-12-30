@@ -25,8 +25,8 @@ module.exports = function(grunt) {
         ].join('\n'),
 
         clean: {
-          dist: ['dist'],
-          tmp: ['tmp']
+            dist: ['dist'],
+            tmp: ['tmp']
         },
 
         sed: {
