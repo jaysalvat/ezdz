@@ -1,6 +1,6 @@
  /* ----------------------------------------------------------------------------
  // Ezdz [izy-dizy]
- // v0.6.0 - released 2017-12-30 20:49
+ // v0.6.1 - released 2017-12-30 21:01
  // Licensed under the MIT license.
  // https://github.com/jaysalvat/ezdz
  // ----------------------------------------------------------------------------
@@ -81,8 +81,7 @@
 
             .on('dragover.ezdz', function(e) {
                 var dt = e.originalEvent.dataTransfer;
-                alert('ok');
-                console.log(dt.types);
+
                 if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
                     $(this).addClass(settings.classes.enter);
 
